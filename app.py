@@ -5,6 +5,10 @@ from query import query_rag as query
 from typing import Union
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
+
+origin = ["*"]
+
 
 allFiles = os.listdir("./data")
 dbClient = chromadb.PersistentClient(path="./database")
@@ -29,6 +33,13 @@ else:
     print("Data Exists")
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origin,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 class Query(BaseModel):
     query: str
 @app.post("/")
