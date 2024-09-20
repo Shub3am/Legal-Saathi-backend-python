@@ -14,19 +14,14 @@ allFiles = os.listdir("./data")
 dbClient = chromadb.PersistentClient(path="./database")
 # vectorDatabase = Chroma(client=dbClient,collection_name="indian-law", embedding_function=getEmbedding())
 try:
-    if(os.environ["OPENAI"] and os.environ["GROQ"]):
-        pass
-    else:
-        try:
-            envFile = open("./.env")
-            allEnvs = envFile.readlines()
-            for env in allEnvs:
-                env = env.strip()
-                os.environ[env.split("=")[0]] =str(env.split("=")[1])
-        except:
-            raise ValueError("Please set the environment variable from examples")
+    envFile = open("./.env")
+    allEnvs = envFile.readlines()
+    for env in allEnvs:
+        env = env.strip()
+        os.environ[env.split("=")[0]] =str(env.split("=")[1])
 except:
-    pass
+    raise ValueError("Please set the environment variable from examples")
+
 collectionCheck = dbClient.list_collections()
 if (len(collectionCheck) == 0):
     dataFetcher()
